@@ -64,26 +64,35 @@ struct HazeIcon: View {
     }
 }
 
-/// Just the haze: a dark screen that mists over from the top edge, clear down at the
-/// hinge — the effect itself, with nothing else on the screen to compete with it.
+/// The blur itself: rows of dots, sharp down at the hinge and going softer and softer
+/// toward the top edge, the way Haze defocuses the screen as the lid closes — with just
+/// a breath of frost along the top.
 struct HazyScreen: View {
+    /// Each row's blur, top to bottom.
+    private let blurs: [CGFloat] = [19, 11, 5.5, 1.6, 0]
+
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color(white: 0.22), Color(white: 0.06)],
+            LinearGradient(colors: [Color(white: 0.16), Color(white: 0.05)],
                            startPoint: .top, endPoint: .bottom)
-                // An overlay, so the mist can spill past the screen without resizing it.
-                .overlay(alignment: .top) {
-                    // A soft bank of mist rolling down from the free edge...
-                    Ellipse()
-                        .fill(Color.white.opacity(0.55))
-                        .frame(width: 720, height: 300)
-                        .offset(y: -190)
-                        .blur(radius: 46)
+            VStack(spacing: 0) {
+                ForEach(blurs.indices, id: \.self) { row in
+                    HStack(spacing: 0) {
+                        ForEach(0..<8, id: \.self) { _ in
+                            Circle()
+                                .fill(Color.white.opacity(0.88))
+                                .frame(width: 22, height: 22)
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .frame(maxHeight: .infinity)
+                    .blur(radius: blurs[row])
                 }
-            // ...thinning out toward the hinge.
-            LinearGradient(stops: [.init(color: .white.opacity(0.62), location: 0),
-                                   .init(color: .white.opacity(0.26), location: 0.32),
-                                   .init(color: .white.opacity(0), location: 0.78)],
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            LinearGradient(stops: [.init(color: .white.opacity(0.2), location: 0),
+                                   .init(color: .white.opacity(0), location: 0.55)],
                            startPoint: .top, endPoint: .bottom)
         }
     }
