@@ -2,25 +2,35 @@ import AppKit
 import ServiceManagement
 import SwiftUI
 
-/// The Settings window: one per app, created on first use.
+/// The Settings window: one per app. Closed, it lets go of its view, so nothing in it
+/// keeps redrawing (or keeps the lid sensor polled) while nobody's looking.
 @MainActor
-final class SettingsWindowController {
+final class SettingsWindowController: NSObject, NSWindowDelegate {
     private var window: NSWindow?
+    private weak var engine: HazeEngine?
 
     func show(engine: HazeEngine) {
-        let window = self.window ?? {
-            let window = NSWindow(contentViewController: NSHostingController(
-                rootView: SettingsView(settings: .shared, engine: engine)
-            ))
+        self.engine = engine
+        let content = NSHostingController(rootView: SettingsView(settings: .shared, engine: engine))
+        if let window {
+            if window.contentViewController == nil { window.contentViewController = content }
+        } else {
+            let window = NSWindow(contentViewController: content)
             window.title = "Haze"
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
+            window.delegate = self
             window.center()
             self.window = window
-            return window
-        }()
+        }
+        engine.isWatched = true
         NSApp.activate()
-        window.makeKeyAndOrderFront(nil)
+        window?.makeKeyAndOrderFront(nil)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        engine?.isWatched = false
+        window?.contentViewController = nil
     }
 }
 
@@ -32,7 +42,15 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Haze on lid close & open", isOn: $settings.isEnabled)
+                Toggle("Haze", isOn: $settings.isEnabled)
+                Picker("Plays on", selection: $settings.trigger) {
+                    ForEach(HazeSettings.Trigger.allCases) { Text($0.title).tag($0) }
+                }
+                .pickerStyle(.segmented)
+                .disabled(!settings.isEnabled)
+            } footer: {
+                Text(triggerDescription)
+                    .foregroundStyle(.secondary)
             }
 
             Section {
@@ -93,6 +111,14 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .frame(width: 440)
         .fixedSize()
+    }
+
+    private var triggerDescription: String {
+        switch settings.trigger {
+        case .both: return "The screen hazes over as the lid closes and clears as it opens."
+        case .close: return "The screen hazes over as the lid closes; opening it, the screen is simply clear."
+        case .open: return "Closing the lid leaves the screen as it is; it wakes hazed and clears as the lid opens."
+        }
     }
 
     /// A degree slider, plus a Set button that takes the lid's current angle.

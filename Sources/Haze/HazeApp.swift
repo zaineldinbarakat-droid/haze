@@ -39,10 +39,11 @@ final class HazeAppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
+        engine.refreshAngle()
         let status = engine.angle.map { "Lid at \(Int($0))°" } ?? "No lid sensor: Haze plays on wake only"
         menu.addItem(NSMenuItem(title: status, action: nil, keyEquivalent: ""))
         menu.addItem(.separator())
-        addItem(to: menu, "Haze on Lid Close & Open", #selector(toggleEnabled), on: settings.isEnabled)
+        addItem(to: menu, "Haze on Lid \(settings.trigger.menuTitle)", #selector(toggleEnabled), on: settings.isEnabled)
         addItem(to: menu, "Preview", #selector(preview))
         addItem(to: menu, "Settings…", #selector(showSettings), key: ",")
         menu.addItem(.separator())
