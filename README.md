@@ -14,7 +14,16 @@
   <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white">
   <img alt="SwiftUI + AppKit" src="https://img.shields.io/badge/UI-SwiftUI%20%2B%20AppKit-0A84FF">
   <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-native-555">
+  <a href="https://github.com/zaineldinbarakat-droid/haze/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/zaineldinbarakat-droid/haze?label=release&color=555"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-3da639"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/zaineldinbarakat-droid/haze/releases/latest/download/Haze.zip"><b>⬇︎ Download Haze</b></a>
+  &nbsp;·&nbsp;
+  <a href="#install">Install</a>
+  &nbsp;·&nbsp;
+  <a href="#under-the-hood">Under the hood</a>
 </p>
 
 Close the lid and the screen frosts over and dims from the top edge down, the way the
@@ -40,6 +49,17 @@ Duo's inner screen does as it folds; open it and the haze clears again.
 - **Preview**: plays a close and open without touching the lid.
 - **Open at login**.
 
+## Install
+
+1. [Download **Haze.zip**](https://github.com/zaineldinbarakat-droid/haze/releases/latest/download/Haze.zip), unzip it and drag **Haze** into **Applications**.
+2. Haze isn't notarized by Apple yet, so the first launch is blocked: open **System Settings → Privacy & Security** and click **Open Anyway** — or run once in Terminal:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/Haze.app
+   ```
+3. Click the laptop icon in the menu bar → **Settings…** to pick where the haze starts.
+
+**Requires** a Mac with Apple Silicon and macOS 14 Sonoma or later. The lid-following effect needs a MacBook with a lid angle sensor, which newer models have; Haze's menu shows whether yours does. Without one, Haze clears the haze on wake only.
+
 ## Build
 
 Requires Xcode and macOS 14 or later on Apple silicon.
@@ -48,6 +68,7 @@ Requires Xcode and macOS 14 or later on Apple silicon.
 git clone https://github.com/zaineldinbarakat-droid/haze.git && cd haze
 ./build.sh            # builds build/Haze.app
 ./install.sh          # builds, installs to /Applications and opens it
+./release.sh 0.1.1    # bumps VERSION and packs build/Haze.zip for a GitHub release
 ```
 
 To look at the effect frozen at one strength (0 to 1), optionally with other settings:
