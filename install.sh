@@ -9,5 +9,7 @@ pkill -x Haze 2>/dev/null || true
 sleep 0.5
 rm -rf "/Applications/Haze.app"
 /usr/bin/ditto "$ROOT/build/Haze.app" "/Applications/Haze.app"
+# Otherwise Spotlight finds two Hazes: this one and the build copy.
+rm -rf "$ROOT/build/Haze.app"
 echo "Installed /Applications/Haze.app"
 open "/Applications/Haze.app"

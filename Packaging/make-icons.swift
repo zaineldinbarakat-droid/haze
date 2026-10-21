@@ -64,34 +64,28 @@ struct HazeIcon: View {
     }
 }
 
+/// Just the haze: a dark screen that mists over from the top edge, clear down at the
+/// hinge — the effect itself, with nothing else on the screen to compete with it.
 struct HazyScreen: View {
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color(white: 0.30), Color(white: 0.10)],
+            LinearGradient(colors: [Color(white: 0.22), Color(white: 0.06)],
                            startPoint: .top, endPoint: .bottom)
-            // Sharp near the hinge...
-            rows.mask(LinearGradient(stops: [.init(color: .clear, location: 0.3),
-                                             .init(color: .black, location: 0.72)],
-                                     startPoint: .top, endPoint: .bottom))
-            // ...frosted toward the free edge.
-            rows.blur(radius: 20)
-                .mask(LinearGradient(stops: [.init(color: .black, location: 0.3),
-                                             .init(color: .clear, location: 0.72)],
-                                     startPoint: .top, endPoint: .bottom))
-            LinearGradient(colors: [.white.opacity(0.55), .white.opacity(0)],
-                           startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.6))
+                // An overlay, so the mist can spill past the screen without resizing it.
+                .overlay(alignment: .top) {
+                    // A soft bank of mist rolling down from the free edge...
+                    Ellipse()
+                        .fill(Color.white.opacity(0.55))
+                        .frame(width: 720, height: 300)
+                        .offset(y: -190)
+                        .blur(radius: 46)
+                }
+            // ...thinning out toward the hinge.
+            LinearGradient(stops: [.init(color: .white.opacity(0.62), location: 0),
+                                   .init(color: .white.opacity(0.26), location: 0.32),
+                                   .init(color: .white.opacity(0), location: 0.78)],
+                           startPoint: .top, endPoint: .bottom)
         }
-    }
-
-    /// Lines of "content" on the screen, there for the blur to soften.
-    private var rows: some View {
-        VStack(alignment: .leading, spacing: 30) {
-            ForEach(Array([330, 240, 290, 200, 260].enumerated()), id: \.offset) { _, width in
-                Capsule().fill(Color.white).frame(width: CGFloat(width), height: 26)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .padding(.leading, 56)
     }
 }
 

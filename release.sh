@@ -17,4 +17,6 @@ echo "$VERSION_NUMBER" > "$ROOT/VERSION"
 rm -f "$ROOT/build/Haze.zip"
 # ditto keeps the bundle's signature, symlinks and attributes intact.
 /usr/bin/ditto -c -k --keepParent "$ROOT/build/Haze.app" "$ROOT/build/Haze.zip"
+# Only the zip is needed from here; a loose copy would show up in Spotlight.
+rm -rf "$ROOT/build/Haze.app"
 echo "Packed build/Haze.zip ($(du -h "$ROOT/build/Haze.zip" | cut -f1)) for $VERSION_NUMBER"
