@@ -60,11 +60,11 @@ final class HazeSettings: ObservableObject {
     private init() {
         defaults.register(defaults: [
             Keys.enabled: true,
-            Keys.startAngle: 80.0,
-            Keys.fullAngle: 15.0,
-            Keys.clearDelay: 3.0,
+            Keys.startAngle: 91.0,
+            Keys.fullAngle: 31.0,
+            Keys.clearDelay: 2.0,
             Keys.blur: 1.0,
-            Keys.dimming: 1.0,
+            Keys.dimming: 0.7,
         ])
         isEnabled = defaults.bool(forKey: Keys.enabled)
         trigger = Trigger(rawValue: defaults.string(forKey: Keys.trigger) ?? "") ?? .both

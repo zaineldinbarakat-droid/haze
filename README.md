@@ -30,9 +30,9 @@ Close the lid and the screen frosts over and dims from the top edge down, the wa
 Duo's inner screen does as it folds; open it and the haze clears again.
 
 - **Follows the lid.** Haze reads the MacBook's lid angle sensor, and the haze depends
-  on the angle alone: none above the start angle (80° by default), full at the
-  full-haze angle (15°), in proportion in between. Opening only ever clears it. Hold
-  the lid still and the screen clears after three seconds.
+  on the angle alone: none above the start angle (91° by default), full at the
+  full-haze angle (31°), in proportion in between. Opening only ever clears it. Hold
+  the lid still and the screen clears after two seconds.
 - **Sharp at the hinge.** The top edge goes soft first; the hinge stays sharp longest.
 - **Wakes up hazy.** The screen goes to sleep hazed and clears as you open the lid.
   Macs without a lid sensor get just this part: the haze clears on every wake.
